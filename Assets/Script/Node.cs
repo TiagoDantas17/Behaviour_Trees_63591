@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using static Unity.VisualScripting.Metadata;
 public class Node
@@ -15,6 +16,11 @@ public string name;
 {
     name = n;
 }
+
+    public virtual Status Process()
+    {
+        return children[currentChild].Process();
+    }
 public void AddChild(Node n)
 {
     children.Add(n);
