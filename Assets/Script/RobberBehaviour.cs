@@ -5,14 +5,15 @@ using UnityEngine.AI;
 using UnityEngine.Apple;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
 public class RobberBehaviour : MonoBehaviour
 {
     BehaviourTree tree;
-    public GameObject dimond;
+    public GameObject diamond;
     public GameObject van;
     NavMeshAgent agent;
 
-    public enum ActionState { ILDE, WORKING };
+    public enum ActionState { IDLE, WORKING };
     ActionState state = ActionState.IDLE;
 
     // Start is called before the first frame update
@@ -40,40 +41,40 @@ public class RobberBehaviour : MonoBehaviour
 
     public Node.Status GoToDiamond()
     {
-        agent.SetDestination(dimond.transform.position);
-        return Node.Status.SUCCESS;
+
+        return GoToLocation(diamond.transform.position);
     }
 
     public Node.Status GoToVan()
     {
-        agent.SetDestination(van.transform.position);
-        return Node.Status.SUCCESS;
+        return GoToLocation(van.transform.position);
     }
 
-    Node.Status GoToLocation(Vector3 destination);
+    Node.Status GoToLocation(Vector3 destination)
     {
-        float distanceToTarget = Vector3.Distance( destination, this.transform.position);
-    If(state== ActionState.IDLE)
-    {
-        agent.SetDestination(destination);
-        state = ActionState.WORKING;
-    }
-    else if ( Vector3.Distance(agente.pathEndPosition, destination) >= 2)
+        float distanceToTarget = Vector3.Distance(destination, this.transform.position);
+        if (state == ActionState.IDLE)
+        {
+            agent.SetDestination(destination);
+            state = ActionState.WORKING;
+        }
+        else if (Vector3.Distance(agent.pathEndPosition, destination) >= 2)
         {
             state = ActionState.IDLE;
             return Node.Status.FAILURE;
         }
 
-        else if (distanceToTarget > 2)
+        else if (distanceToTarget <= 2)
         {
-             State = ActionState.IDLE;
-             return Node.Status.SUCCESS;
+            state = ActionState.IDLE;
+            return Node.Status.SUCCESS;
         }
-   }
+        return Node.Status.RUNNING;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
