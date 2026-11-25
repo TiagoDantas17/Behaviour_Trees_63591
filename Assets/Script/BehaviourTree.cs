@@ -9,15 +9,6 @@ public class BehaviourTree : Node
         name = "Tree";
     }
 
-    public override Status Process()
-    {
-        return Status.SUCCESS;
-    }
-
-
-
-
-
     public BehaviourTree(string n)
     {
         name = n;

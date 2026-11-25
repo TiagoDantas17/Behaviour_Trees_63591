@@ -1,28 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEngine;
-using static Unity.VisualScripting.Metadata;
-public class Node
-{
-    public enum Status { SUCCESS, RUNNING, FAILURE };
-public Status status;
-public List<Node> children = new List<Node>();
-public int currentChild = 0;
-public string name;
-    public Node()
-    { }
-    public Node(string n) 
-{
-    name = n;
-}
 
-    public virtual Status Process()
-    {
-        return children[currentChild].Process();
-    }
-public void AddChild(Node n)
+using UnityEngine;
+
+public class Sequence : Node
 {
-    children.Add(n);
-}
+    public Sequence(string n)
+    {
+        name = n;
+    }
+
+    public override Status Process()
+    {
+        Status Childstatus = children[currentChild].Process();
+        if (Childstatus == Status.RUNNING) return Status.RUNNING;
+        if (Childstatus == Status.FAILURE)
+            return Childstatus;
+
+        currentChild++;
+        if (currentChild >= children.Count)
+        {
+            currentChild = 0;
+            return Status.SUCCESS;
+        }
+        return Status.RUNNING;
+    }
 }
