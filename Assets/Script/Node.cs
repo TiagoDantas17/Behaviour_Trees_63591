@@ -2,31 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Selector : Node
+public class Node
 {
-    public Selector(string n)
+    public enum Status { SUCCESS, RUNNING, FAILURE };
+    public Status status;
+    public List<Node> children = new List<Node>();
+    public int currentChild = 0;
+    public string name;
+
+    public Node() { }
+
+    public Node(string n)
     {
         name = n;
     }
 
-    public override Status Process()
+    public virtual Status Process()
     {
-        Status childstatus = children[currentChild].Process();
-        if (childstatus == Status.RUNNING) return Status.RUNNING;
-
-        if (childstatus == Status.SUCCESS)
-        {
-            currentChild = 0;
-            return Status.SUCCESS;
-        }
-
-        currentChild++;
-        if (currentChild >= children.Count)
-        {
-            currentChild = 0;
-            return Status.FAILURE;
-        }
-        return Status.RUNNING;
+        return children[currentChild].Process();
     }
 
+    public void AddChild(Node n)
+    {
+        children.Add(n);
+    }
 }
